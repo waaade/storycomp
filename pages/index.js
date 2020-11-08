@@ -18,9 +18,10 @@ const Index = () => {
   if (!user) {
     return (
       <>
-        <p>Hi there!</p>
+        <h1>Welcome to StoryComp</h1>
+        <p>StoryComp is a tool to help fiction writers create and remember characters, locations, organizations, and more.</p>
         <p>
-          You are not signed in.{' '}
+          {' '}
           <Link href={'/auth'}>
             <a>Sign in</a>
           </Link>
