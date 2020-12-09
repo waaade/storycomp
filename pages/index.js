@@ -1,6 +1,9 @@
 import useSWR from 'swr'
 import Link from 'next/link'
 import { useUser } from '../utils/auth/useUser'
+//import getProjects from '../utils/getProjects'
+//import { firebaseAdmin } from '../utils/auth/firebaseAdmin'
+
 
 const fetcher = (url, token) =>
   fetch(url, {
@@ -10,11 +13,11 @@ const fetcher = (url, token) =>
   }).then((res) => res.json())
 
 const Index = () => {
-  const { user, logout } = useUser()
-  const { data, error } = useSWR(
-    user ? ['/api/getFood', user.token] : null,
-    fetcher
-  )
+  const { user, logout, saveUser } = useUser()
+  // const { data, error } = useSWR(
+  //   user ? ['/api/getFood', user.token] : null,
+  //   fetcher
+  // )
   if (!user) {
     return (
       <>
@@ -29,7 +32,8 @@ const Index = () => {
       </>
     )
   }
-
+  //getProjects(user);
+  saveUser()
   return (
     <div>
       <div>
@@ -51,12 +55,12 @@ const Index = () => {
           <a>Another example page</a>
         </Link>
       </div>
-      {error && <div>Failed to fetch food!</div>}
+      {/* {error && <div>Failed to fetch food!</div>}
       {data && !error ? (
         <div>Your favorite food is {data.food}.</div>
       ) : (
         <div>Loading...</div>
-      )}
+      )} */}
     </div>
   )
 }

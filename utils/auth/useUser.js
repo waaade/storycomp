@@ -11,6 +11,7 @@ import {
 import { mapUserData } from './mapUserData'
 
 initFirebase()
+let db = firebase.firestore();
 
 const useUser = () => {
   const [user, setUser] = useState()
@@ -22,11 +23,22 @@ const useUser = () => {
       .signOut()
       .then(() => {
         // Sign-out successful.
-        router.push('/auth')
+        router.push('/out')
       })
       .catch((e) => {
         console.error(e)
       })
+  }
+
+  const saveUser = async () => {
+    //Add user to users collection, if it's not already there
+    const doc = await db.collection('users').doc(user.id).get();
+    if (!doc.exists) {
+      const userToStore = { id: user.id,
+                    email: user.email 
+      };
+      const res = await db.collection('users').doc(user.id).set(userToStore);
+    }
   }
 
   useEffect(() => {
@@ -59,7 +71,7 @@ const useUser = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  return { user, logout }
+  return { user, logout, saveUser }
 }
 
 export { useUser }
