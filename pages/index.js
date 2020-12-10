@@ -1,16 +1,15 @@
-import useSWR from 'swr'
+// import useSWR from 'swr'
 import Link from 'next/link'
 import { useUser } from '../utils/auth/useUser'
-//import getProjects from '../utils/getProjects'
-//import { firebaseAdmin } from '../utils/auth/firebaseAdmin'
+import getProjects from '../utils/getProjects'
+import { Browser } from '../components/Browser'
 
-
-const fetcher = (url, token) =>
-  fetch(url, {
-    method: 'GET',
-    headers: new Headers({ 'Content-Type': 'application/json', token }),
-    credentials: 'same-origin',
-  }).then((res) => res.json())
+// const fetcher = (url, token) =>
+//   fetch(url, {
+//     method: 'GET',
+//     headers: new Headers({ 'Content-Type': 'application/json', token }),
+//     credentials: 'same-origin',
+//   }).then((res) => res.json())
 
 const Index = () => {
   const { user, logout, saveUser } = useUser()
@@ -22,7 +21,8 @@ const Index = () => {
     return (
       <>
         <h1>Welcome to StoryComp</h1>
-        <p>StoryComp is a tool to help fiction writers create and remember characters, locations, organizations, and more.</p>
+        <p>StoryComp is a tool to help fiction writers create and 
+        remember characters, locations, organizations, and more.</p>
         <p>
           {' '}
           <Link href={'/auth'}>
@@ -32,8 +32,9 @@ const Index = () => {
       </>
     )
   }
-  //getProjects(user);
   saveUser()
+  // const projects = getProjects(user.id)
+  // .then(() => console.log("Got projects."));
   return (
     <div>
       <div>
@@ -49,6 +50,7 @@ const Index = () => {
         >
           Log out
         </p>
+        <Browser uid={user.id} />
       </div>
       <div>
         <Link href={'/example'}>
