@@ -1,30 +1,54 @@
-import React from 'react';
-import foreachObject from '../utils/foreach-object'
+import React from 'react'; 
 import getProjects from '../utils/getProjects'
+import getEntries from '../utils/getEntries'
+import { ProjectList, Project } from '../components/Project'
+import { Ring } from 'react-awesome-spinners'
 
-//This component shows a user's projects and their entires
-
+//Browser shows a user's projects and their entires
 class Browser extends React.Component {
-    //This component should be given a collection of either projects or entries
     constructor(props) {
         super(props);
         this.state = {
             showing: "projects",
+            loading: true,
         };
+        this.showEntries = this.showEntries.bind(this);
     }
+    //Async because we need the items from firestore before rendering
     async componentDidMount() {
-        if (this.state.showing == "projects") {
-            this.setState({projects: await getProjects(this.props.uid)});
+        this.setState({projects: await getProjects(this.props.uid)});
+        this.setState({loading: false});
+        this.setState({entries: await getEntries(this.props.uid)});
+    }
+    componentDidUpdate(prevState) {
+        if (this.state.showing == "entries") {
+            //TODO: getEntries(uid, projectId)
         }
+    }
+    //This function must be given to Project components as a prop.
+    //It is called when a Project is clicked so that the Browser will show the entries
+    //https://stackoverflow.com/questions/35537229/how-to-update-parents-state-in-react
+    showEntries(whichProject) {
+        this.setState({showing: "entries"});
+        this.setState({currentProject: whichProject});
+    }
+    //Pass this function to EntryList
+    goBack() {
+        this.setState({showing: "projects"});
     }
     render() {
         if (this.state.showing == "projects") {
             return (
             <div>
             <p>Jack Frost says "hee ho!"</p>
-            <ProjectList projects={this.state.projects}/>
+            {this.state.loading ? <Ring /> : <ProjectList projects={this.state.projects} handler={this.showEntries} />}
             </div>
             );
+        }
+        else if (this.state.showing == "entries") {
+            return (
+                <p>I'mma gonna show you entries now -Mario</p>
+            )
         }
         else {
             return (<div><p>Impossible....</p></div>);
@@ -32,39 +56,5 @@ class Browser extends React.Component {
     }
 }
 
-//http://react.tips/how-to-create-components-dynamically-in-react-16/
-//Needs a collection of projects in props
-class ProjectList extends React.Component {
-    getProject(project) {
-        return <Project data={project.data} key={project.id} />;
-    }
-    //Build an array of project components 
-    buildList(projects) {
-        let list = null;
-        foreachObject (projects, element => {
-            console.log(element)
-            if (!list) {
-                list = [this.getProject(element)];
-            }
-            else {
-                list.push(this.getProject(element));
-            }
-        });
-        return list;
-    }
-    render() {
-        return (
-            <div>
-            {this.buildList(this.props.projects)}
-            </div>
-        )
-    }
-}
 
-class Project extends React.Component {
-    render() {
-        return (<div><h3>{this.props.data.name}</h3></div>);
-    }
-}
-
-export { Browser, ProjectList, Project };
+export { Browser };
