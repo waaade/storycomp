@@ -10,7 +10,7 @@ import 'firebase/firestore'
 
 class EntryList extends React.Component {
     buildEntry(entry) {
-        return <Entry data={entry.data} key={entry.id} id={entry.id}/>;
+        return <Entry data={entry.data} key={entry.id} id={entry.id} update={this.props.update}/>;
     }
      
     buildList(entries) {
@@ -55,6 +55,7 @@ class Entry extends React.Component {
       };
       this.clientEdits = this.clientEdits.bind(this);
     }
+    //This function ensures edits made are shown immediately.
     clientEdits(values) {
       console.log(values);
       this.setState({
@@ -71,7 +72,7 @@ class Entry extends React.Component {
         <td>{this.state.data.type}</td>
         <td><EntryContent data={this.state.data} id={this.props.id}/></td>
         <td><Popup trigger={<div className="divButton">Edit</div>} modal>
-            <EditEntry data={this.state.data} id={this.props.id} handler={this.clientEdits}/></Popup></td>
+            <EditEntry data={this.state.data} id={this.props.id} handler={this.clientEdits} update={this.props.update}/></Popup></td>
         </tr>
         );
     }
@@ -105,6 +106,7 @@ const EditEntry = (props) => {
         const ref = db.collection('entries').doc(props.id);
         const res = await ref.update(values);
         props.handler(values);
+        props.update();
       }
       catch (error) {
         console.log(error);
@@ -126,51 +128,6 @@ const EditEntry = (props) => {
   </div>
   );
 };
-// class EditEntry extends React.Component {
-//     constructor(props) {
-//         super(props);
-//         this.state = {
-//             name: this.props.data.name,
-//             type: this.props.data.type
-//         };
-//         this.handleChange = this.handleChange.bind(this);
-//         this.sendChanges = this.sendChanges.bind(this);
 
-//     }
-//     handleChange(event) {
-//         const target = event.target;
-//         const value = target.value;
-//         const name = target.name;
-//         this.setState({
-//             [name]: value
-//         });
-//     }
-//     async sendChanges() {
-//         const changes = {
-//             name: this.state.name,
-//         };
-//         console.log(changes);
-//         // const ref = db.collection('entries').doc(id);
-//         // const res = await ref.update(changes);
-//     }
-//     render() {
-//         return (
-//             <Popup trigger={<div className="divButton">Edit</div>} 
-//             modal >
-//             <form onSubmit={this.handleSubmit}> 
-//                 <label>
-//                     Name:
-//                     <input
-//                         name="name"
-//                         type="input"
-//                         value={this.state.name}
-//                         onChange={this.handleChange} />
-//                 </label>
-//                 <button onClick={this.sendChanges}>Save</button>
-//             </form>
-//             </Popup>
-//         )
-//     }
-// }
 
 export { EntryList, Entry }

@@ -17,6 +17,7 @@ class Browser extends React.Component {
         this.showEntries = this.showEntries.bind(this);
         this.goBack = this.goBack.bind(this);
         this.filterEntriesByProject = this.filterEntriesByProject.bind(this);
+        this.updateEntries = this.updateEntries.bind(this);
     }
     //Async because we need the items from firestore before rendering
     async componentDidMount() {
@@ -33,8 +34,8 @@ class Browser extends React.Component {
         this.setState({showing: "entries"});
         this.setState({currentProject: whichProject});
     }
-    componentDidUpdate(prevState) {
-
+    async updateEntries() {
+        this.setState({entries: await getEntries(this.props.uid)});
     }
     //Only the entries corresponding to currentProject should be shown
     filterEntriesByProject() {
@@ -68,7 +69,7 @@ class Browser extends React.Component {
         else if (this.state.showing == "entries") {
             return (
                 <div>
-                <EntryList entries={this.filterEntriesByProject()} handler={this.goBack} />
+                <EntryList entries={this.filterEntriesByProject()} handler={this.goBack} update={this.updateEntries} />
                 </div>
             )
         }
