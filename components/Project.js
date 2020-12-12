@@ -6,8 +6,8 @@ import "react-simple-flex-grid/lib/main.css";
 //http://react.tips/how-to-create-components-dynamically-in-react-16/
 //Needs a collection of projects in props
 class ProjectList extends React.Component {
-    getProject(project) {
-        return <Project data={project.data} key={project.id} handler={this.props.handler} />;
+    buildProject(project) {
+        return <Project data={project.data} id={project.id} key={project.id} handler={this.props.handler} />;
     }
     //Build an array of project components 
     buildList(projects) {
@@ -15,10 +15,10 @@ class ProjectList extends React.Component {
         foreachObject (projects, element => {
             console.log(element)
             if (!list) {
-                list = [this.getProject(element)];
+                list = [this.buildProject(element)];
             }
             else {
-                list.push(this.getProject(element));
+                list.push(this.buildProject(element));
             }
         });
         return list;
@@ -35,9 +35,10 @@ class ProjectList extends React.Component {
 //This is one item in a Project list. Clicking it will open the project (i.e. show its Entries)
 class Project extends React.Component {
     render() {
+        console.log(this.props.id);
         return (
         <Col span={3}>
-        <button onClick = {this.props.handler.bind(this.key)}>
+        <button onClick = {()=>this.props.handler(this.props.id)}>
         <h3>{this.props.data.name}</h3></button>
         </Col>);
     }
