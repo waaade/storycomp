@@ -33,7 +33,8 @@ const generateEntryObject = (entry) => {
         data: {
             name: entry.data().name,
             userId: entry.data().userId,
-            projectId: entry.data().projectId
+            projectId: entry.data().projectId,
+            type: entry.data().type
             }
         };
 }

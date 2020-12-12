@@ -37,7 +37,7 @@ class Project extends React.Component {
     render() {
         console.log(this.props.id);
         return (
-        <Col span={3}>
+        <Col span={2}>
         <button onClick = {()=>this.props.handler(this.props.id)}>
         <h3>{this.props.data.name}</h3></button>
         </Col>);

@@ -61,7 +61,6 @@ class Browser extends React.Component {
         if (this.state.showing == "projects") {
             return (
             <div>
-            <p>Jack Frost says "hee ho!"</p>
             {this.state.loading ? <Ring /> : <ProjectList projects={this.state.projects} handler={this.showEntries} />}
             </div>
             );
@@ -69,10 +68,7 @@ class Browser extends React.Component {
         else if (this.state.showing == "entries") {
             return (
                 <div>
-                <p>I'mma gonna show you entries now -Mario</p>
-                <div>
                 <EntryList entries={this.filterEntriesByProject()} handler={this.goBack} />
-                </div>
                 </div>
             )
         }
