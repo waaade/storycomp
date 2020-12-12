@@ -2,6 +2,10 @@ import React from 'react';
 import foreachObject from '../utils/foreach-object'
 import { Row, Col } from 'react-simple-flex-grid';
 import "react-simple-flex-grid/lib/main.css";
+import { Formik, Field, Form } from 'formik';
+import firebase from 'firebase/app'
+import initFirebase from '../utils/auth/initFirebase'
+import 'firebase/firestore'
 
 //http://react.tips/how-to-create-components-dynamically-in-react-16/
 //Needs a collection of projects in props
@@ -44,4 +48,42 @@ class Project extends React.Component {
     }
 }
 
-export {ProjectList, Project }
+const NewProject = (props) => {
+  return (
+    <div>
+  <Formik
+    initialValues= {{
+      name: '',
+    }}
+    onSubmit={async (values) => {
+      try {
+        initFirebase();
+        let db = firebase.firestore();
+        const res = await db.collection('projects').add({
+            name: values.name,
+            userId: props.uid
+            });
+        props.update();
+      }
+      catch (error) {
+        console.log(error);
+      }
+      
+    }}
+  >
+  {({isSubmitting}) => (
+    <Form>
+    <label htmlFor="name">Name</label>
+          <Field name="name" />
+
+          <button type="submit" disabled={isSubmitting}>
+            Submit
+          </button>
+        </Form>
+  )}
+  </Formik>
+  </div>
+  );
+};
+
+export {ProjectList, Project, NewProject }

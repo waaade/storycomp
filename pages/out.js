@@ -9,6 +9,9 @@ const Out = (props) => {
       <p>See you next time!</p>
       <Link href={'/'}>
         <a>Home</a>
+      </Link><br/>
+      <Link href={'/auth'}>
+        <a>Sign In</a>
       </Link>
     </div>
   )

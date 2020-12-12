@@ -2,9 +2,10 @@ import React from 'react';
 import foreachObject from '../utils/foreach-object' 
 import getProjects from '../utils/getProjects'
 import getEntries from '../utils/getEntries'
-import { ProjectList, Project } from '../components/Project'
+import { ProjectList, Project, NewProject } from '../components/Project'
 import { EntryList, Entry } from '../components/EntryList'
 import { Ring } from 'react-awesome-spinners'
+import Popup from 'reactjs-popup';
 
 //Browser shows a user's projects and their entires
 class Browser extends React.Component {
@@ -18,6 +19,7 @@ class Browser extends React.Component {
         this.goBack = this.goBack.bind(this);
         this.filterEntriesByProject = this.filterEntriesByProject.bind(this);
         this.updateEntries = this.updateEntries.bind(this);
+        this.updateProjects = this.updateProjects.bind(this);
     }
     //Async because we need the items from firestore before rendering
     async componentDidMount() {
@@ -36,6 +38,9 @@ class Browser extends React.Component {
     }
     async updateEntries() {
         this.setState({entries: await getEntries(this.props.uid)});
+    }
+    async updateProjects() {
+        this.setState({projects: await getProjects(this.props.uid)});
     }
     //Only the entries corresponding to currentProject should be shown
     filterEntriesByProject() {
@@ -61,15 +66,21 @@ class Browser extends React.Component {
     render() {
         if (this.state.showing == "projects") {
             return (
+            <div className={'browser'}>
+            <h2>Your Projects</h2>
+            <Popup trigger={<div className="divButton">New Project</div>} modal>
+                <div><h2>Create New Project</h2><NewProject uid={this.props.uid} update={this.updateProjects}/></div>
+            </Popup>
             <div>
             {this.state.loading ? <Ring /> : <ProjectList projects={this.state.projects} handler={this.showEntries} />}
+            </div>
             </div>
             );
         }
         else if (this.state.showing == "entries") {
             return (
                 <div>
-                <EntryList entries={this.filterEntriesByProject()} handler={this.goBack} update={this.updateEntries} />
+                <EntryList entries={this.filterEntriesByProject()} uid={this.props.uid} pid={this.state.currentProject} handler={this.goBack} update={this.updateEntries} />
                 </div>
             )
         }

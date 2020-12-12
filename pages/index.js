@@ -1,25 +1,20 @@
-// import useSWR from 'swr'
 import Link from 'next/link'
 import { useUser } from '../utils/auth/useUser'
 import getProjects from '../utils/getProjects'
 import { Browser } from '../components/Browser'
 
-// const fetcher = (url, token) =>
-//   fetch(url, {
-//     method: 'GET',
-//     headers: new Headers({ 'Content-Type': 'application/json', token }),
-//     credentials: 'same-origin',
-//   }).then((res) => res.json())
+//https://stackoverflow.com/questions/52284288/how-to-vertically-and-horizontally-center-a-component-in-react
 
 const Index = () => {
   const { user, logout, saveUser } = useUser()
-  // const { data, error } = useSWR(
-  //   user ? ['/api/getFood', user.token] : null,
-  //   fetcher
-  // )
   if (!user) {
     return (
       <>
+
+      <div style={{
+        position: 'absolute', left: '50%', top: '50%',
+        transform: 'translate(-50%, -50%)'
+    }}>
         <h1>Welcome to StoryComp</h1>
         <p>StoryComp is a tool to help fiction writers create and 
         remember characters, locations, organizations, and more.</p>
@@ -29,19 +24,20 @@ const Index = () => {
             <a>Sign in</a>
           </Link>
         </p>
+      </div>
+        
       </>
     )
   }
   saveUser()
-  // const projects = getProjects(user.id)
-  // .then(() => console.log("Got projects."));
+  
   return (
     <div>
       <div>
-        <p>You're signed in. Email: {user.email}</p>
+        <p style={{fontSize: 10}}>Wlecome! Email: {user.email}</p>
         <p
           style={{
-            display: 'inline-block',
+            fontSize: 14,
             color: 'blue',
             textDecoration: 'underline',
             cursor: 'pointer',
@@ -50,19 +46,11 @@ const Index = () => {
         >
           Log out
         </p>
+        <h1>StoryComp</h1>
         <Browser uid={user.id} />
       </div>
       <div>
-        <Link href={'/example'}>
-          <a>Another example page</a>
-        </Link>
       </div>
-      {/* {error && <div>Failed to fetch food!</div>}
-      {data && !error ? (
-        <div>Your favorite food is {data.food}.</div>
-      ) : (
-        <div>Loading...</div>
-      )} */}
     </div>
   )
 }
